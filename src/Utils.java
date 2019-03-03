@@ -24,7 +24,21 @@ public class Utils {
 
     public static ArrayList<ElectionResult> parse2016ElectionResults(String data) {
         ArrayList<ElectionResult> out = new ArrayList<ElectionResult>();
+        String[] lines = data.split("\n");
+        String[] values;
 
+
+        double demVotes, gopVotes, totalVotes, perGop, diff, perPointDiff, combinedFips;
+        String stateAbbr, countyName;
+
+
+        for(String line: lines){
+            line.replace("%","");
+            line.replace("\"","");
+
+            values = line.split(",");
+
+        }
 
 
         return out;
