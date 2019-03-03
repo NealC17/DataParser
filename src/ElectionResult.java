@@ -42,6 +42,38 @@ public class ElectionResult {
         return stateAbbr;
     }
 
+    public void setDemVotes(double demVotes) {
+        this.demVotes = demVotes;
+    }
+
+    public void setGopVotes(double gopVotes) {
+        this.gopVotes = gopVotes;
+    }
+
+    public void setTotalVotes(double totalVotes) {
+        this.totalVotes = totalVotes;
+    }
+
+    public void setPerGop(double perGop) {
+        this.perGop = perGop;
+    }
+
+    public void setDiff(double diff) {
+        this.diff = diff;
+    }
+
+    public void setPerPointDiff(double perPointDiff) {
+        this.perPointDiff = perPointDiff;
+    }
+
+    public void setStateAbbr(String stateAbbr) {
+        this.stateAbbr = stateAbbr;
+    }
+
+    public void setCountyName(String countyName) {
+        this.countyName = countyName;
+    }
+
     public String getCountyName() {
         return countyName;
     }
