@@ -1,9 +1,10 @@
 public class ElectionResult {
 
-    private double demVotes, gopVotes, totalVotes, perGop, diff, perPointDiff, combinedFips;
+    private double demVotes, gopVotes, totalVotes,perDem, perGop, diff, perPointDiff, combinedFips;
     private String stateAbbr, countyName;
 
-    public ElectionResult(double demVotes, double gopVotes, double totalVotes, double perGop, double diff, double perPointDiff, String stateAbbr, String countyName, double combinedFips) {
+
+    public ElectionResult(double demVotes, double gopVotes, double totalVotes, double perDem, double perGop, double diff, double perPointDiff, String stateAbbr, String countyName, double combinedFips) {
         this.demVotes = demVotes;
         this.gopVotes = gopVotes;
         this.totalVotes = totalVotes;
@@ -13,6 +14,15 @@ public class ElectionResult {
         this.stateAbbr = stateAbbr;
         this.countyName = countyName;
         this.combinedFips = combinedFips;
+    }
+
+
+    public double getPerDem() {
+        return perDem;
+    }
+
+    public void setPerDem(double perDem) {
+        this.perDem = perDem;
     }
 
     public double getCombinedFips() {
@@ -85,5 +95,9 @@ public class ElectionResult {
 
     public String getCountyName() {
         return countyName;
+    }
+
+    public String toString(){
+        return demVotes + ", " + gopVotes + ", " + demVotes + ", " + gopVotes + ", " +totalVotes + ", " +perGop + ", " +diff + ", " +perPointDiff + ", " + stateAbbr + ", " +countyName+ ", " +combinedFips ;
     }
 }
