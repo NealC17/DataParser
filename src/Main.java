@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Main class for data parser
  */
@@ -7,6 +9,8 @@ public class Main {
         // Test of Utils
 
         String data = Utils.readFileAsString("data/2016_Presidential_Results.csv");
-        System.out.println(data);
+
+        ArrayList<ElectionResult> results = Utils.parse2016ElectionResults(data);
+
     }
 }
