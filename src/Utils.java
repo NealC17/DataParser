@@ -38,23 +38,21 @@ public class Utils {
 
         for(int i = 1; i < lines.length; i++) {
             line = lines[i];
-            line = line.replaceAll("%","");
-            line = line.replaceAll("\"","");
 
             values = line.split(",");
-
-            System.out.println(Arrays.toString(values));
 
             demVotes = Double.parseDouble(values[1]);
             gopVotes = Double.parseDouble(values[2]);
             totalVotes = Double.parseDouble(values[3]);
             perDem = Double.parseDouble(values[4]);
             perGop = Double.parseDouble(values[5]);
-            diff = Double.parseDouble(values[6]);
-            perPointDiff = getNum(values[7],values[8]);
-            stateAbbr = values[9];
-            countyName = values[10];
-            combinedFips = Double.parseDouble(values[11]);
+
+            diff = getDiff(line);
+            perPointDiff = getPerPointDiff(line);
+
+            stateAbbr = values[values.length-3];
+            countyName = values[values.length-2];
+            combinedFips = Double.parseDouble(values[values.length-1]);
 
             out.add(new ElectionResult(demVotes,gopVotes,totalVotes,perDem,perGop,diff,perPointDiff,stateAbbr,countyName,combinedFips));
         }
@@ -63,9 +61,51 @@ public class Utils {
         return out;
     }
 
-    private static double getNum(String value, String value2) {
-        String out = value + value2;
+    private static double getPerPointDiff(String line) {
 
-        return Double.parseDouble(out);
+        int percentIndex = line.indexOf("%");
+        int firstCommaIndex, secondCommaIndex = percentIndex+1;
+        int i = percentIndex;
+        while (!line.substring(i-1,i).equals(",")){
+            i--;
+        }
+        firstCommaIndex = i;
+
+        return Double.parseDouble(line.substring(firstCommaIndex,secondCommaIndex).replace(",","").replace("%",""))/100;
+
+
     }
+
+    private static double getDiff(String line) {
+        if(line.indexOf("\"")!=-1){
+            int firstQuoteIndex = line.indexOf("\"");
+            int secondQuoteIndex = line.indexOf("\"",firstQuoteIndex+1);
+
+            String out = line.substring(firstQuoteIndex,secondQuoteIndex);
+            return Double.parseDouble(out.replace("\"","").replace(",",""));
+        } else {
+            int percentIndex = line.indexOf("%");
+            int secondCommaIndex = line.indexOf(",", percentIndex), firstCommaIndex;
+            int i = secondCommaIndex-1;
+
+            while (!line.substring(i-1,i).equals(",")){
+                i--;
+            }
+
+            secondCommaIndex = i;
+            i--;
+
+            while (!line.substring(i-1,i).equals(",")){
+                i--;
+            }
+            firstCommaIndex = i;
+
+            return Double.parseDouble(line.substring(firstCommaIndex, secondCommaIndex).replace(",",""));
+        }
+
+
+    }
+
+
+
 }

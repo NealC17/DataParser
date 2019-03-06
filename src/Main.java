@@ -12,7 +12,10 @@ public class Main {
 
 
         ArrayList<ElectionResult> results = Utils.parse2016ElectionResults(data);
-        System.out.println(results.get(0));
+        
+        for(ElectionResult e: results){
+            System.out.println(e);
+        }
 
     }
 }
