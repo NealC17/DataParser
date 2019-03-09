@@ -13,6 +13,7 @@ public class Main {
 
         ArrayList<ElectionResult> results = Utils.parse2016ElectionResults(data);
 
+
         for(ElectionResult e: results){
             System.out.println(e);
         }
