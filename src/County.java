@@ -6,4 +6,51 @@ public class County {
     private Employment2016 employment;
 
 
+    public County(String name, int fips, Election2016 vote, Education2016 education, Employment2016 employment) {
+        this.name = name;
+        this.fips = fips;
+        this.vote = vote;
+        this.education = education;
+        this.employment = employment;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getFips() {
+        return fips;
+    }
+
+    public void setFips(int fips) {
+        this.fips = fips;
+    }
+
+    public Election2016 getVote() {
+        return vote;
+    }
+
+    public void setVote(Election2016 vote) {
+        this.vote = vote;
+    }
+
+    public Education2016 getEducation() {
+        return education;
+    }
+
+    public void setEducation(Education2016 education) {
+        this.education = education;
+    }
+
+    public Employment2016 getEmployment() {
+        return employment;
+    }
+
+    public void setEmployment(Employment2016 employment) {
+        this.employment = employment;
+    }
 }
