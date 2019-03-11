@@ -1,10 +1,10 @@
+import javax.sound.midi.Soundbank;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 public class Utils {
 
@@ -24,19 +24,63 @@ public class Utils {
         return output.toString();
     }
 
+    public static DataManager getDataCollection(String educationData, String employmentData, String electionData) {
 
-    public static ArrayList<ElectionResult> parse2016ElectionResults(String data) {
-        ArrayList<ElectionResult> out = new ArrayList<ElectionResult>();
+        while (educationData.indexOf(",,") != -1) {
+            educationData = educationData.replace(",,", ",");
+        }
+
+        while (electionData.indexOf(",,") != -1) {
+            electionData = electionData.replace(",,", ",");
+        }
+
+        DataManager d = new DataManager();
+
+        add2016EducationData(d, educationData);
+        add2016ElectionData(d, electionData);
+
+
+        return d;
+    }
+
+    private static void add2016EducationData(DataManager d, String educationData) {
+        String[] ed = educationData.split("\n");
+        String[] data;
+        double noHighSchool, highSchool, someCollege, bachelors;
+        County c;
+        String line;
+        int i;
+        for (i = 9; i < ed.length - 10; i++) {
+            line = ed[i];
+
+            data = line.split(",");
+            bachelors = Double.parseDouble(data[data.length - 1]);
+            someCollege = Double.parseDouble(data[data.length - 2]);
+            highSchool = Double.parseDouble(data[data.length - 3]);
+            noHighSchool = Double.parseDouble(data[data.length - 4]);
+            c = new County(Integer.parseInt(line.substring(0, line.indexOf(","))));
+            c.setEducation(noHighSchool, highSchool, someCollege, bachelors);
+            c.setStateAbbr(line.substring(line.indexOf(",") + 1, line.indexOf(",") + 3));
+            d.addCounty(c);
+        }
+    }
+
+
+    private static String removeRedundantCharecters(String exem) {
+        return exem.replaceAll(",", "").replaceAll(" ", "").replaceAll("\"", "").replaceAll("\t", "");
+    }
+
+
+    private static void add2016ElectionData(DataManager d, String data) {
         String[] lines = data.split("\n");
         String[] values;
         String line;
 
 
-        double demVotes, gopVotes, totalVotes, perDem,perGop, diff, perPointDiff, combinedFips;
-        String stateAbbr, countyName;
+        double demVotes, gopVotes, totalVotes, combinedFips;
+        Election2016 e;
 
-
-        for(int i = 1; i < lines.length; i++) {
+        for (int i = 1; i < lines.length; i++) {
             line = lines[i];
 
             values = line.split(",");
@@ -44,68 +88,18 @@ public class Utils {
             demVotes = Double.parseDouble(values[1]);
             gopVotes = Double.parseDouble(values[2]);
             totalVotes = Double.parseDouble(values[3]);
-            perDem = Double.parseDouble(values[4]);
-            perGop = Double.parseDouble(values[5]);
 
-            diff = getDiff(line);
-            perPointDiff = getPerPointDiff(line);
-
-            stateAbbr = values[values.length-3];
-            countyName = values[values.length-2];
-            combinedFips = Double.parseDouble(values[values.length-1]);
-
-            out.add(new ElectionResult(demVotes,gopVotes,totalVotes,perDem,perGop,diff,perPointDiff,stateAbbr,countyName,combinedFips));
-        }
-
-
-        return out;
-    }
-
-    private static double getPerPointDiff(String line) {
-
-        int percentIndex = line.indexOf("%");
-        int firstCommaIndex, secondCommaIndex = percentIndex+1;
-        int i = percentIndex;
-        while (!line.substring(i-1,i).equals(",")){
-            i--;
-        }
-        firstCommaIndex = i;
-
-        return Double.parseDouble(line.substring(firstCommaIndex,secondCommaIndex).replace(",","").replace("%",""))/100;
-
-
-    }
-
-    private static double getDiff(String line) {
-        if(line.indexOf("\"")!=-1){
-            int firstQuoteIndex = line.indexOf("\"");
-            int secondQuoteIndex = line.indexOf("\"",firstQuoteIndex+1);
-
-            String out = line.substring(firstQuoteIndex,secondQuoteIndex);
-            return Double.parseDouble(out.replace("\"","").replace(",",""));
-        } else {
-            int percentIndex = line.indexOf("%");
-            int secondCommaIndex = line.indexOf(",", percentIndex), firstCommaIndex;
-            int i = secondCommaIndex-1;
-
-            while (!line.substring(i-1,i).equals(",")){
-                i--;
+            combinedFips = Double.parseDouble(values[values.length - 1]);
+            e = new Election2016(demVotes, gopVotes, totalVotes);
+            if (d.getCountyByFipsCode((int) combinedFips) != null) {
+                d.getCountyByFipsCode((int) combinedFips).setVote(e);
+            } else {
+//                d.addCounty((int) (combinedFips));
+//                d.getCountyByFipsCode((int) (combinedFips)).setVote(e);
             }
-
-            secondCommaIndex = i;
-            i--;
-
-            while (!line.substring(i-1,i).equals(",")){
-                i--;
-            }
-            firstCommaIndex = i;
-
-            return Double.parseDouble(line.substring(firstCommaIndex, secondCommaIndex).replace(",",""));
         }
 
 
     }
-
-
 
 }
