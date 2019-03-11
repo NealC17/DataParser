@@ -38,9 +38,49 @@ public class Utils {
 
         add2016EducationData(d, educationData);
         add2016ElectionData(d, electionData);
+        add2016EmploymentData(d,employmentData);
 
 
         return d;
+    }
+
+    private static void add2016EmploymentData(DataManager d, String employmentData) {
+        employmentData = employmentData.replace("\",\"","&");
+        employmentData = employmentData.replace("\",","&");
+        employmentData = employmentData.replace(",\"","&");
+        employmentData = employmentData.replace(",\"","&");
+        String[] lines = employmentData.split("\n");
+        String[] data,three , dataClone;
+        String clone;
+        //& key is a breakpoint
+        String data2, rate, unemployment, total, employment;
+        int lastC=0;
+        Employment2016 e;
+        int fips;
+
+        for (int i = 9; i < lines.length; i++) {
+            System.out.println(lines[i]);
+            clone = new String(lines[i]);
+            fips = Integer.parseInt(lines[i].substring(0,lines[i].indexOf(",")));
+            if(d.getCountyByFipsCode(fips)==null){
+                continue;
+            }
+
+            dataClone = clone.split("\t");
+            data = lines[i].split("&");
+            System.out.println(data.length);
+
+            rate = removeRedundantCharecters(dataClone[dataClone.length-1].substring(0,dataClone[dataClone.length-1].indexOf(",")));
+
+            total = removeRedundantCharecters(dataClone[dataClone.length-3]);
+
+            employment = removeRedundantCharecters(dataClone[dataClone.length-2]);
+            int a = dataClone[dataClone.length-1].indexOf(rate);
+            unemployment = removeRedundantCharecters(dataClone[dataClone.length-1].substring(a,dataClone[dataClone.length-1].indexOf(",",a)));
+            e = new Employment2016(Integer.parseInt(total),Integer.parseInt(employment), Integer.parseInt(unemployment),Double.parseDouble(rate));
+            d.getCountyByFipsCode(fips).setEmployment(e);
+        }
+
     }
 
     private static void add2016EducationData(DataManager d, String educationData) {
@@ -67,7 +107,8 @@ public class Utils {
 
 
     private static String removeRedundantCharecters(String exem) {
-        return exem.replaceAll(",", "").replaceAll(" ", "").replaceAll("\"", "").replaceAll("\t", "");
+        return exem.replaceAll(",", "").replaceAll(" ", "").
+                replaceAll("\"", "").replaceAll("\t", "").replaceAll("&","");
     }
 
 
