@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        // Test of Utils
         String elecData = Utils.readFileAsString("data/2016_Presidential_Results.csv");
         String edData = Utils.readFileAsString("data/Education.csv");
         String unData= Utils.readFileAsString("data/Unemployment.csv");

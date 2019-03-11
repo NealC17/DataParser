@@ -59,7 +59,6 @@ public class Utils {
         int fips;
 
         for (int i = 9; i < lines.length; i++) {
-            System.out.println(lines[i]);
             clone = new String(lines[i]);
             fips = Integer.parseInt(lines[i].substring(0,lines[i].indexOf(",")));
             if(d.getCountyByFipsCode(fips)==null){
@@ -68,7 +67,6 @@ public class Utils {
 
             dataClone = clone.split("\t");
             data = lines[i].split("&");
-            System.out.println(data.length);
 
             rate = removeRedundantCharecters(dataClone[dataClone.length-1].substring(0,dataClone[dataClone.length-1].indexOf(",")));
 
