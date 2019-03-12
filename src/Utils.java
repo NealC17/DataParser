@@ -132,9 +132,6 @@ public class Utils {
             e = new Election2016(demVotes, gopVotes, totalVotes);
             if (d.getCountyByFipsCode((int) combinedFips) != null) {
                 d.getCountyByFipsCode((int) combinedFips).setVote(e);
-            } else {
-//                d.addCounty((int) (combinedFips));
-//                d.getCountyByFipsCode((int) (combinedFips)).setVote(e);
             }
         }
 
