@@ -1,7 +1,7 @@
-public class Election2016 {
+public class ElectionData {
     private double demVotes, gopVotes,totalVotes;
 
-    public Election2016(double demVotes, double gopVotes, double totalVotes) {
+    public ElectionData(double demVotes, double gopVotes, double totalVotes) {
         this.demVotes = demVotes;
         this.gopVotes = gopVotes;
         this.totalVotes = totalVotes;

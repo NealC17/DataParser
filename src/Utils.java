@@ -1,9 +1,5 @@
-import javax.sound.midi.Soundbank;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Utils {
@@ -45,41 +41,41 @@ public class Utils {
     }
 
     private static void add2016EmploymentData(DataManager d, String employmentData) {
-        employmentData = employmentData.replace("\",\"","&");
-        employmentData = employmentData.replace("\",","&");
-        employmentData = employmentData.replace(",\"","&");
-        employmentData = employmentData.replace(",\"","&");
-        String[] lines = employmentData.split("\n");
-        String[] data,three , dataClone;
-        String clone;
-        //& key is a breakpoint
-        String data2, rate, unemployment, total, employment;
-        int lastC=0;
-        Employment2016 e;
-        int fips;
-
-        for (int i = 9; i < lines.length; i++) {
-            clone = new String(lines[i]);
-            fips = Integer.parseInt(lines[i].substring(0,lines[i].indexOf(",")));
-            if(d.getCountyByFipsCode(fips)==null){
-                continue;
-            }
-
-            dataClone = clone.split("\t");
-            data = lines[i].split("&");
-
-            rate = removeRedundantCharecters(dataClone[dataClone.length-1].substring(0,dataClone[dataClone.length-1].indexOf(",")));
-
-            total = removeRedundantCharecters(dataClone[dataClone.length-3]);
-
-            employment = removeRedundantCharecters(dataClone[dataClone.length-2]);
-            int a = dataClone[dataClone.length-1].indexOf(rate);
-            unemployment = removeRedundantCharecters(dataClone[dataClone.length-1].substring(a,dataClone[dataClone.length-1].indexOf(",",a)));
-            e = new Employment2016(Integer.parseInt(total),Integer.parseInt(employment), Integer.parseInt(unemployment),Double.parseDouble(rate));
-            d.getCountyByFipsCode(fips).setEmployment(e);
+        while(employmentData.indexOf(",,")!=-1){
+            employmentData = employmentData.replace(",,", ",");
         }
 
+        String[] lines = employmentData.split("\n");
+        String[] data;
+        EmploymentData e;
+
+        double[] unemploymentPercent;
+        String line;
+        for(int i = 10; i < lines.length;i++){
+            line = lines[i];
+            data = line.split(",");
+            unemploymentPercent = getUnemploymentPercent(data);
+            e = new EmploymentData(unemploymentPercent);
+            County c = d.getCountyByFipsCode(Integer.parseInt(line.substring(0,line.indexOf(","))));
+
+            if(c!=null&&e.getUnemployedPercent()[0]<100){
+                c.setEmployment(e);
+            }
+        }
+
+
     }
+
+    private static double[] getUnemploymentPercent(String[] data) {
+        double[] out = new double[11];
+        int count = 0;
+        for (int i = 9; i < data.length; i+=4) {
+            out[count++] = Double.parseDouble(data[i].trim());
+        }
+
+        return out;
+    }
+
 
     private static void add2016EducationData(DataManager d, String educationData) {
         String[] ed = educationData.split("\n");
@@ -88,7 +84,7 @@ public class Utils {
         County c;
         String line;
         int i;
-        for (i = 9; i < ed.length - 10; i++) {
+        for (i = 10; i < ed.length - 10; i++) {
             line = ed[i];
 
             data = line.split(",");
@@ -97,18 +93,11 @@ public class Utils {
             highSchool = Double.parseDouble(data[data.length - 3]);
             noHighSchool = Double.parseDouble(data[data.length - 4]);
             c = new County(Integer.parseInt(line.substring(0, line.indexOf(","))));
-            c.setEducation(noHighSchool, highSchool, someCollege, bachelors);
+            c.setEducation(bachelors);
             c.setStateAbbr(line.substring(line.indexOf(",") + 1, line.indexOf(",") + 3));
             d.addCounty(c);
         }
     }
-
-
-    private static String removeRedundantCharecters(String exem) {
-        return exem.replaceAll(",", "").replaceAll(" ", "").
-                replaceAll("\"", "").replaceAll("\t", "").replaceAll("&","");
-    }
-
 
     private static void add2016ElectionData(DataManager d, String data) {
         String[] lines = data.split("\n");
@@ -117,7 +106,7 @@ public class Utils {
 
 
         double demVotes, gopVotes, totalVotes, combinedFips;
-        Election2016 e;
+        ElectionData e;
 
         for (int i = 1; i < lines.length; i++) {
             line = lines[i];
@@ -129,13 +118,27 @@ public class Utils {
             totalVotes = Double.parseDouble(values[3]);
 
             combinedFips = Double.parseDouble(values[values.length - 1]);
-            e = new Election2016(demVotes, gopVotes, totalVotes);
+            e = new ElectionData(demVotes, gopVotes, totalVotes);
             if (d.getCountyByFipsCode((int) combinedFips) != null) {
                 d.getCountyByFipsCode((int) combinedFips).setVote(e);
             }
         }
 
 
+    }
+
+    public static String formatData(String data) {
+        String normalizedString = "";
+        char[] chars = data.toCharArray();
+        boolean inQuotes = false;
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] == '"') {
+                inQuotes = !inQuotes;
+            } else if (!(inQuotes && chars[i] == ',')) {
+                normalizedString += chars[i];
+            }
+        }
+        return normalizedString;
     }
 
 }

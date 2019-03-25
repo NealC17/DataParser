@@ -1,13 +1,13 @@
 public class County {
     private String name;
     private int fips;
-    private Election2016 vote;
-    private Education2016 education;
-    private Employment2016 employment;
+    private ElectionData vote;
+    private EducationData education;
+    private EmploymentData employment;
     private String stateAbbr;
 
 
-    public County(String stateAbbr, String name, int fips, Election2016 vote, Education2016 education, Employment2016 employment) {
+    public County(String stateAbbr, String name, int fips, ElectionData vote, EducationData education, EmploymentData employment) {
         this.name = name;
         this.fips = fips;
         this.vote = vote;
@@ -39,27 +39,27 @@ public class County {
         this.fips = fips;
     }
 
-    public Election2016 getVote() {
+    public ElectionData getVote() {
         return vote;
     }
 
-    public void setVote(Election2016 vote) {
+    public void setVote(ElectionData vote) {
         this.vote = vote;
     }
 
-    public Education2016 getEducation() {
+    public EducationData getEducation() {
         return education;
     }
 
-    public void setEducation(Education2016 education) {
+    public void setEducation(EducationData education) {
         this.education = education;
     }
 
-    public Employment2016 getEmployment() {
+    public EmploymentData getEmployment() {
         return employment;
     }
 
-    public void setEmployment(Employment2016 employment) {
+    public void setEmployment(EmploymentData employment) {
         this.employment = employment;
     }
 
@@ -67,8 +67,8 @@ public class County {
         return stateAbbr;
     }
 
-    public void setEducation(double noHighSchool, double highSchool, double someCollege, double bachelors) {
-        Education2016 e = new Education2016(noHighSchool,highSchool,someCollege,bachelors);
+    public void setEducation(double noHighSchool) {
+        EducationData e = new EducationData(noHighSchool);
         setEducation(e);
     }
 }

@@ -1,5 +1,3 @@
-import com.sun.org.glassfish.gmbal.ParameterNames;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +7,7 @@ public class DataManager {
         counties= new ArrayList<>();
     }
 
-    public void addCounty(String stateAbbr, String name, int fips, Election2016 vote, Education2016 education, Employment2016 employment){
+    public void addCounty(String stateAbbr, String name, int fips, ElectionData vote, EducationData education, EmploymentData employment){
         counties.add(new County(stateAbbr, name,fips,vote,education,employment));
     }
 
