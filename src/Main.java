@@ -18,10 +18,14 @@ public class Main {
         for (County c : dataManager.getCounties()) {
             e = c.getEducation();
             if (e != null) {
-                System.out.println((e.getBachelorsOrMore()));
-
+                //System.out.println((c));
             }
         }
+        EmploymentData em = dataManager.getCountyByName("nevada").getEmployment();
+        System.out.println(em.getByYear(2018));
+
+
+
     }
 
 

@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class EmploymentData {
 
 
@@ -25,5 +28,13 @@ public class EmploymentData {
         for (int i = 0; i < unemployedPercent.length; i++) {
             employmentPercent[i] = 1-unemployedPercent[i];
         }
+    }
+
+    public String toString(){
+        return Arrays.toString(unemployedPercent);
+    }
+
+    public double getByYear(int year) {
+        return unemployedPercent[year-2008];
     }
 }

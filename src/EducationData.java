@@ -6,6 +6,10 @@ public class EducationData {
         this.bachelorsOrMore = bachelorsOrMore;
     }
 
+    public String toString(){
+        return String.valueOf(bachelorsOrMore);
+    }
+
 
     public double getBachelorsOrMore() {
         return bachelorsOrMore;

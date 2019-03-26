@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Utils {
@@ -51,6 +53,7 @@ public class Utils {
 
         double[] unemploymentPercent;
         String line;
+
         for(int i = 10; i < lines.length;i++){
             line = lines[i];
             data = line.split(",");
@@ -58,7 +61,7 @@ public class Utils {
             e = new EmploymentData(unemploymentPercent);
             County c = d.getCountyByFipsCode(Integer.parseInt(line.substring(0,line.indexOf(","))));
 
-            if(c!=null&&e.getUnemployedPercent()[0]<100){
+            if(c!=null){
                 c.setEmployment(e);
             }
         }
@@ -67,11 +70,17 @@ public class Utils {
     }
 
     private static double[] getUnemploymentPercent(String[] data) {
-        double[] out = new double[11];
+        double[] out = new double[10];
         int count = 0;
-        for (int i = 9; i < data.length; i+=4) {
-            out[count++] = Double.parseDouble(data[i].trim());
+        for (int i = 0; i < data.length; i++) {
+            if(data[i].contains(".") && !data[i].contains("St")){
+                out[count++] = Double.parseDouble(data[i].trim());
+            }
+            if(count == out.length){
+                return out;
+            }
         }
+
 
         return out;
     }
@@ -84,16 +93,16 @@ public class Utils {
         County c;
         String line;
         int i;
-        for (i = 10; i < ed.length - 10; i++) {
+        for (i = 10; i < ed.length-1; i++) {
             line = ed[i];
-
+            if(!County.isState(line.substring(9,line.indexOf(",",10)).toLowerCase())){
+                continue;
+            }
             data = line.split(",");
             bachelors = Double.parseDouble(data[data.length - 1]);
-            someCollege = Double.parseDouble(data[data.length - 2]);
-            highSchool = Double.parseDouble(data[data.length - 3]);
-            noHighSchool = Double.parseDouble(data[data.length - 4]);
             c = new County(Integer.parseInt(line.substring(0, line.indexOf(","))));
             c.setEducation(bachelors);
+            c.setName(line.substring(9,line.indexOf(",",10)).toLowerCase());
             c.setStateAbbr(line.substring(line.indexOf(",") + 1, line.indexOf(",") + 3));
             d.addCounty(c);
         }

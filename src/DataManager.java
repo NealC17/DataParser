@@ -40,10 +40,33 @@ public class DataManager {
 
     public void addCounty(int combinedFips) {
         County c = new County(combinedFips);
-
+        counties.add(c);
     }
 
     public void addCounty(County c) {
         counties.add(c);
+    }
+
+    public ArrayList<County> getStates() {
+        ArrayList<County> out = new ArrayList<>();
+        for(County c: counties){
+            String name = c.getName();
+            if(name.indexOf("county")==-1&&name.indexOf("borough")==-1&&name.indexOf("division")==-1&&name.indexOf("parish")==-1
+                    &&name.indexOf("city")==-1&&name.indexOf("park")==-1&&name.indexOf("municipio")==-1&&name.indexOf("area")==-1
+                    &&name.indexOf("islands")==-1&&name.indexOf("municipality")==-1){
+                out.add(c);
+            }
+        }
+
+        return out;
+    }
+
+    public County getCountyByName(String name) {
+        for (County c: counties) {
+            if(c.getName().equals(name)){
+                return c;
+            }
+        }
+        return null;
     }
 }

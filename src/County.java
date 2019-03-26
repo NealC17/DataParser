@@ -71,4 +71,19 @@ public class County {
         EducationData e = new EducationData(noHighSchool);
         setEducation(e);
     }
+
+    public boolean isState(){
+        return name.indexOf("county")==-1&&name.indexOf("borough")==-1&&name.indexOf("division")==-1&&name.indexOf("parish")==-1
+                &&name.indexOf("city")==-1&&name.indexOf("park")==-1&&name.indexOf("municipio")==-1&&name.indexOf("area")==-1
+                &&name.indexOf("islands")==-1&&name.indexOf("municipality")==-1;
+    }
+
+    public static boolean isState(String name){
+        return name.indexOf("county")==-1&&name.indexOf("borough")==-1&&name.indexOf("division")==-1&&name.indexOf("parish")==-1
+                &&name.indexOf("city")==-1&&name.indexOf("park")==-1&&name.indexOf("municipio")==-1&&name.indexOf("area")==-1
+                &&name.indexOf("islands")==-1&&name.indexOf("municipality")==-1;
+    }
+    public String toString(){
+        return name + ": " + education + ", " + employment;
+    }
 }
